@@ -28,6 +28,10 @@ import {
   getRenderMode,
   updateRenderMode,
 } from 'src/store/settingsSlice';
+import {
+  getCommunityEnabled,
+  setCommunityEnabled,
+} from 'src/community/communitySlice';
 import {AccentSelect} from '../inputs/accent-select';
 import {THEMES} from 'src/utils/themes';
 import {MenuContainer} from './configure-panes/custom/menu-generator';
@@ -66,6 +70,7 @@ export const Settings = () => {
   const themeName = useAppSelector(getThemeName);
   const renderMode = useAppSelector(getRenderMode);
   const selectedDevice = useAppSelector(getSelectedConnectedDevice);
+  const communityEnabled = useAppSelector(getCommunityEnabled);
 
   const [showDiagnostics, setShowDiagnostics] = useState(false);
 
@@ -187,6 +192,17 @@ export const Settings = () => {
                   onChange={(option: any) => {
                     option && dispatch(updateRenderMode(option.value));
                   }}
+                />
+              </Detail>
+            </ControlRow>
+            <ControlRow>
+              <Label>{t('Community JSON Matching')}</Label>
+              <Detail>
+                <AccentSlider
+                  onChange={() =>
+                    dispatch(setCommunityEnabled(!communityEnabled))
+                  }
+                  isChecked={communityEnabled}
                 />
               </Detail>
             </ControlRow>
