@@ -1,65 +1,53 @@
-# [VIA Web Application](https://usevia.app) - Your keyboards best friend
+# TheVIA - Community-Enhanced VIA Keyboard Configurator
 
-![android-chrome-192x192](https://user-images.githubusercontent.com/1714072/222621960-ddfb8ee6-a486-4c66-8852-b204ba7c807b.png)
+A fork of [VIA](https://usevia.app) that adds community-driven keyboard definition sharing, so unrecognized keyboards can be configured without manual JSON hunting.
 
-[![Azure Static Web Apps CI/CD](https://github.com/the-via/app/actions/workflows/azure.yml/badge.svg)](https://github.com/the-via/app/actions/workflows/azure.yml)
+## Key Features
 
-VIA is a powerful, open-source web-based interface for configuring your [QMK](https://qmk.fm)-powered mechanical keyboard. It allows you to customize your keymaps, create macros, and adjust RGB settings (if it has RGB) on the fly, without needing to recompile your keyboard's firmware. This makes keyboard customization easier and more accessible for everyone.
+- **Community JSON Matching** - Automatically finds and applies keyboard definitions uploaded by the community when VIA doesn't recognize a device
+- **Trust & Voting System** - Community definitions are ranked by trust scores and user votes to surface reliable configs
+- **Definition Upload** - Users can contribute their working keyboard definitions back to the community
+- **Full VIA Compatibility** - All original VIA features (keymap, macros, lighting, RGB) work unchanged
 
-## Getting VIA to support your keyboard
+## Tech Stack
 
-Are you a keyboard maker or a developer interested in adding support for your keyboard? We welcome contributions to the VIA project!
+| Layer | Technology |
+|-------|-----------|
+| Frontend | React 18, Redux Toolkit, styled-components, Vite, TypeScript |
+| Backend | Fastify, Drizzle ORM, PostgreSQL, Zod |
+| Infra | Cloudflare Pages (frontend), Fly.io / Docker (backend) |
 
-1. The source code of the keyboard **has to be merged** in [QMK Firmware Repositories](https://github.com/qmk/qmk_firmware) Master branch.
-2. Your `keymaps/via` keymap **has to be merged** in [VIA's QMK Userspace Repository](https://github.com/the-via/qmk_userspace_via) Main branch.
-3. Create a definition in JSON format for your keyboard and submit it as a pull request to [VIA's Keyboards Repository](https://github.com/the-via/keyboards) Master branch.
+## Quick Start
 
-Please follow our [Specification documentation](https://www.caniusevia.com/docs/specification) carefully to ensure your pull request is smoothly reviewed and merged.
-
-## Local development setup
-
-Start by cloning [`the-via/keyboards`](github.com/the-via/keyboards) then install dependencies with `npm install` and finally `npm run build`. You should see
-the output folder `dist`. This should be copied or symlinked to our repo's `public/definitions` folder.
+### Frontend
 
 ```bash
-# Inside the-via/app
-public/definitions -> ../../keyboards/dist
+npm install
+npm run dev
+# Opens at http://localhost:5173
 ```
 
-### Useful commands
+### Backend
 
-#### `npm run dev`
+```bash
+cd server
+npm install
+cp .env.example .env   # Edit with your database URL
+npm run db:migrate
+npm run dev
+# API at http://localhost:3001
+```
 
-Runs the app in the development mode.
-Open [http://localhost:5173](http://localhost:5173) to view it in the browser.
+### Environment Variables
 
-The page will reload if you make edits.
-You will also see any lint errors in the console.
+Copy `.env.example` to `.env` in the project root for frontend config. See `server/.env.example` for backend config.
 
-#### `npm run build`
+## Documentation
 
-Builds a static copy of your site to the `build/` folder.
-Your app is ready to be deployed!
+See [docs/](docs/) for detailed plans:
+- [Product Plan](docs/PRODUCT_PLAN.md)
+- [Development Plan](docs/DEV_PLAN.md)
 
-#### `npm run test`
+## License
 
-Launches the application test runner.
-Run with the `--watch` flag (`npm test -- --watch`) to run in interactive watch mode.
-
----
-
-This project is tested with [BrowserStack](https://www.browserstack.com/).
-
-## Looking for an offline app?
-
-@cebby2420 has kindly made a desktop app that does so.
-
-You can find it at [https://github.com/cebby2420/via-desktop](https://github.com/cebby2420/via-desktop).
-
-**NOTE: This project has no official affiliation with VIA, and we cannot provide support for it.**
-
-## Facing Issues?
-
-If you encounter any issues or bugs while using the [VIA web application](https://usevia.app), please report them by opening an issue in the [Issues section](https://github.com/the-via/app/issues). This will help us to track down and resolve problems, and improve the VIA experience for everyone.
-
-Before reporting, please make sure to check if an issue has already been reported. Thank you!
+GPL-3.0
