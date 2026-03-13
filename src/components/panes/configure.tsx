@@ -42,6 +42,9 @@ import {useAppDispatch} from 'src/store/hooks';
 import {MenuTooltip} from '../inputs/tooltip';
 import {getRenderMode, getSelectedTheme} from 'src/store/settingsSlice';
 import {useTranslation} from 'react-i18next';
+import {useCommunitySelector} from 'src/community/hooks';
+import {getMatchStatus, getLastSearchedDevice} from 'src/community/communitySlice';
+import {UnmatchedKeyboard} from 'src/community/components/UnmatchedKeyboard';
 
 const MenuContainer = styled.div`
   padding: 15px 10px 20px 10px;
@@ -157,6 +160,10 @@ const Loader: React.FC<{
   const noConnectedDevices = !Object.values(connectedDevices).length;
   const [showButton, setShowButton] = useState<boolean>(false);
 
+  // Community fallback state
+  const communityMatchStatus = useCommunitySelector(getMatchStatus);
+  const lastSearchedDevice = useCommunitySelector(getLastSearchedDevice);
+
   useEffect(() => {
     // TODO: Remove the timeout because it is funky
     const timeout = setTimeout(() => {
@@ -166,6 +173,20 @@ const Loader: React.FC<{
     }, 3000);
     return () => clearTimeout(timeout);
   }, [selectedDefinition]);
+
+  // Show UnmatchedKeyboard when community search found no definition
+  if (communityMatchStatus === 'not_found' && lastSearchedDevice) {
+    return (
+      <LoaderPane>
+        <UnmatchedKeyboard
+          vendorId={lastSearchedDevice.vendorId}
+          productId={lastSearchedDevice.productId}
+          productName={lastSearchedDevice.productName}
+        />
+      </LoaderPane>
+    );
+  }
+
   return (
     <LoaderPane>
       {<ChippyLoader theme={theme} progress={loadProgress || null} />}

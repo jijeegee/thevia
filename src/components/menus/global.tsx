@@ -5,6 +5,7 @@ import PANES from '../../utils/pane-config';
 import {useAppSelector} from 'src/store/hooks';
 import {getShowDesignTab} from 'src/store/settingsSlice';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faUsers, faCircleInfo} from '@fortawesome/free-solid-svg-icons';
 import {CategoryMenuTooltip} from '../inputs/tooltip';
 import {CategoryIconContainer} from '../panes/grid';
 import {ErrorLink, ErrorsPaneConfig} from '../panes/errors';
@@ -58,6 +59,18 @@ export const UnconnectedGlobalMenu = () => {
       <GlobalContainer>
         <ErrorLink />
         {Panes}
+        <Link to="/community">
+          <CategoryIconContainer $selected={location === '/community'}>
+            <FontAwesomeIcon size={'xl'} icon={faUsers} />
+            <CategoryMenuTooltip>{t('Community')}</CategoryMenuTooltip>
+          </CategoryIconContainer>
+        </Link>
+        <Link to="/about">
+          <CategoryIconContainer $selected={location === '/about'}>
+            <FontAwesomeIcon size={'xl'} icon={faCircleInfo} />
+            <CategoryMenuTooltip>{t('About')}</CategoryMenuTooltip>
+          </CategoryIconContainer>
+        </Link>
         <LanguageSelect />
         <ExternalLinks />
       </GlobalContainer>

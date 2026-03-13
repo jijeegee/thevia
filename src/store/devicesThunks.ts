@@ -41,6 +41,11 @@ import {extractDeviceInfo, logAppError} from './errorsSlice';
 import {tryForgetDevice} from 'src/shims/node-hid';
 import {isAuthorizedDeviceConnected} from 'src/utils/type-predicates';
 import {loadFirmwareVersion} from './firmwareSlice';
+import {
+  searchCommunityDefinition,
+  clearCommunityMatch,
+  getCommunityEnabled,
+} from '../community/communitySlice';
 
 const selectConnectedDeviceRetry = createRetry(8, 100);
 
@@ -188,10 +193,30 @@ export const reloadConnectedDevices =
         return devices;
       }, {});
 
+    // Devices that have no official VIA definition
+    const unmatchedDevices = authorizedDevices.filter(
+      (device) => !isAuthorizedDeviceConnected(device, newDefinitions),
+    );
+
+    // Community fallback: search for community definitions for unmatched devices
+    const communityEnabled = getCommunityEnabled(getState() as any);
+    if (communityEnabled && unmatchedDevices.length > 0) {
+      // Search community DB for the first unmatched device (non-blocking)
+      const device = unmatchedDevices[0];
+      dispatch(
+        searchCommunityDefinition({
+          vendorId: device.vendorId,
+          productId: device.productId,
+          productName: device.productName,
+        }),
+      );
+    } else if (unmatchedDevices.length === 0) {
+      // Clear any previous community match when all devices have official definitions
+      dispatch(clearCommunityMatch());
+    }
+
     // Remove authorized devices that we could not find definitions for
-    authorizedDevices
-      .filter((device) => !isAuthorizedDeviceConnected(device, newDefinitions))
-      .forEach(tryForgetDevice);
+    unmatchedDevices.forEach(tryForgetDevice);
 
     const validDevicesArr = Object.entries(connectedDevices);
     validDevicesArr.forEach(([path, d]) => {

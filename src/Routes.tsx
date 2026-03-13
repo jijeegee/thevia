@@ -10,6 +10,9 @@ import {useMemo, useState} from 'react';
 import {OVERRIDE_HID_CHECK} from './utils/override';
 import {useAppSelector} from './store/hooks';
 import {getRenderMode} from './store/settingsSlice';
+import {NotificationBar} from './community/components/NotificationBar';
+import {CommunityPage} from './community/pages/CommunityPage';
+import {AboutPage} from './community/pages/AboutPage';
 
 const GlobalStyle = createGlobalStyle`
   *:focus {
@@ -38,9 +41,14 @@ export default () => {
         <TestContext.Provider value={testContextState}>
           <GlobalStyle />
           {hasHIDSupport && <UnconnectedGlobalMenu />}
+          <NotificationBar />
           <CanvasRouter />
 
-          <Home hasHIDSupport={hasHIDSupport}>{RouteComponents}</Home>
+          <Home hasHIDSupport={hasHIDSupport}>
+            {RouteComponents}
+            <Route path="/community" component={CommunityPage} />
+            <Route path="/about" component={AboutPage} />
+          </Home>
         </TestContext.Provider>
     </>
   );
