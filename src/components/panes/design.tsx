@@ -271,7 +271,7 @@ export const DesignTab: FC = () => {
         }}
       >
         This feature is intended for development purposes. If your keyboard is
-        not recognized automatically by VIA, please contact your keyboard's
+        not recognized automatically by TheVIA, please contact your keyboard's
         manufacturer or vendor.
       </MessageDialog>
       <SinglePaneFlexCell ref={flexRef}>

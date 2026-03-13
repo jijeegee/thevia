@@ -140,7 +140,7 @@ const saveAppErrors = async (errors: AppError[]) =>
   saveErrors(
     errors,
     ['timestamp', 'productName', 'vendorId', 'productId', 'message'],
-    'VIA-app-errors',
+    'TheVIA-app-errors',
     ({timestamp, deviceInfo: {productName, vendorId, productId}, message}) =>
       `${timestamp}, ${productName}, ${printId(vendorId)}, ${printId(
         productId,
