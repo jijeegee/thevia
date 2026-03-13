@@ -4,10 +4,10 @@ import {
   integer,
   varchar,
   bigint,
-  timestamptz,
+  timestamp,
   unique,
-  sql,
 } from 'drizzle-orm/pg-core';
+import { sql } from 'drizzle-orm';
 
 /**
  * Keyboard definitions table.
@@ -35,8 +35,8 @@ export const definitions = pgTable(
     replaceCount: integer('replace_count').notNull().default(0),
     uploaderName: varchar('uploader_name', { length: 100 }),
     uploaderHash: varchar('uploader_hash', { length: 64 }),
-    createdAt: timestamptz('created_at').notNull().defaultNow(),
-    updatedAt: timestamptz('updated_at').notNull().defaultNow(),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+    updatedAt: timestamp('updated_at').notNull().defaultNow(),
   },
   (table) => [
     unique('definitions_unique_combo').on(
@@ -62,7 +62,7 @@ export const votes = pgTable(
       .references(() => definitions.id, { onDelete: 'cascade' }),
     voterHash: varchar('voter_hash', { length: 64 }).notNull(),
     voteType: varchar('vote_type', { length: 10 }).notNull(),
-    createdAt: timestamptz('created_at').notNull().defaultNow(),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
   },
   (table) => [
     unique('votes_unique_voter').on(table.definitionId, table.voterHash),
@@ -81,7 +81,7 @@ export const sessions = pgTable('sessions', {
   sessionHash: varchar('session_hash', { length: 64 }).notNull(),
   outcome: varchar('outcome', { length: 20 }).notNull(),
   durationSec: integer('duration_sec'),
-  createdAt: timestamptz('created_at').notNull().defaultNow(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
 });
 
 // Type exports for use in services

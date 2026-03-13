@@ -1,5 +1,6 @@
 import fs from 'fs/promises';
 import path from 'path';
+import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand, HeadObjectCommand } from '@aws-sdk/client-s3';
 import { config } from '../config.js';
 
 /**
@@ -100,31 +101,80 @@ class LocalStorageService implements StorageService {
 }
 
 /**
- * R2/S3 storage implementation placeholder.
- * To be implemented when switching to cloud storage.
+ * Cloudflare R2 storage implementation.
+ * Uses S3-compatible API via @aws-sdk/client-s3.
  */
 class R2StorageService implements StorageService {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  private client: S3Client;
+  private bucket: string;
+
+  constructor() {
+    if (!config.R2_ENDPOINT || !config.R2_ACCESS_KEY_ID || !config.R2_SECRET_ACCESS_KEY) {
+      throw new Error('R2 storage requires R2_ENDPOINT, R2_ACCESS_KEY_ID, and R2_SECRET_ACCESS_KEY');
+    }
+
+    this.client = new S3Client({
+      region: 'auto',
+      endpoint: config.R2_ENDPOINT,
+      credentials: {
+        accessKeyId: config.R2_ACCESS_KEY_ID,
+        secretAccessKey: config.R2_SECRET_ACCESS_KEY,
+      },
+    });
+    this.bucket = config.R2_BUCKET;
+  }
+
   async put(key: string, content: Buffer | string): Promise<string> {
-    // TODO: Implement R2 upload using @aws-sdk/client-s3
-    // const client = new S3Client({ endpoint: config.R2_ENDPOINT, ... });
-    // await client.send(new PutObjectCommand({ Bucket: config.R2_BUCKET, Key: key, Body: content }));
-    throw new Error('R2 storage not yet implemented. Set STORAGE_TYPE=local in .env');
+    const body = typeof content === 'string' ? Buffer.from(content, 'utf-8') : content;
+
+    await this.client.send(new PutObjectCommand({
+      Bucket: this.bucket,
+      Key: key,
+      Body: body,
+      ContentType: 'application/json',
+    }));
+
+    return `/api/v1/definitions/${path.basename(key, '.json')}/json`;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async get(key: string): Promise<Buffer | null> {
-    throw new Error('R2 storage not yet implemented');
+    try {
+      const response = await this.client.send(new GetObjectCommand({
+        Bucket: this.bucket,
+        Key: key,
+      }));
+
+      if (!response.Body) return null;
+      const bytes = await response.Body.transformToByteArray();
+      return Buffer.from(bytes);
+    } catch (error: any) {
+      if (error.name === 'NoSuchKey' || error.$metadata?.httpStatusCode === 404) {
+        return null;
+      }
+      throw error;
+    }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async delete(key: string): Promise<void> {
-    throw new Error('R2 storage not yet implemented');
+    await this.client.send(new DeleteObjectCommand({
+      Bucket: this.bucket,
+      Key: key,
+    }));
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async exists(key: string): Promise<boolean> {
-    throw new Error('R2 storage not yet implemented');
+    try {
+      await this.client.send(new HeadObjectCommand({
+        Bucket: this.bucket,
+        Key: key,
+      }));
+      return true;
+    } catch (error: any) {
+      if (error.name === 'NotFound' || error.$metadata?.httpStatusCode === 404) {
+        return false;
+      }
+      throw error;
+    }
   }
 }
 

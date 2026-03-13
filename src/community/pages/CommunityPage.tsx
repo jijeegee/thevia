@@ -3,7 +3,7 @@
 
 import React, {useCallback, useEffect, useState} from 'react';
 import styled from 'styled-components';
-import {getKeyboards, KeyboardListItem} from '../api';
+import {getKeyboards, getDefinitionJson, KeyboardListItem} from '../api';
 import {TrustBadge} from '../components/TrustBadge';
 
 // ── Styled components ──────────────────────────────────────────────
@@ -82,19 +82,54 @@ const KeyboardGrid = styled.div`
   max-width: 900px;
 `;
 
-const KeyboardCard = styled.div`
+const KeyboardCard = styled.div<{$expanded?: boolean}>`
   display: flex;
   flex-direction: column;
   gap: 8px;
   padding: 16px;
-  border: 1px solid var(--border_color_cell);
+  border: 1px solid ${(p) => p.$expanded ? 'var(--color_accent)' : 'var(--border_color_cell)'};
   border-radius: 8px;
   background: var(--bg_control);
   transition: border-color 0.15s ease;
+  cursor: pointer;
 
   &:hover {
     border-color: var(--color_accent);
   }
+`;
+
+const CardDetail = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border_color_cell);
+  font-size: 13px;
+`;
+
+const DetailRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  color: var(--color_label);
+`;
+
+const CardActions = styled.div`
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+`;
+
+const ActionButton = styled.button`
+  padding: 6px 12px;
+  border: 1px solid var(--border_color_cell);
+  border-radius: 4px;
+  background: var(--color_accent);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  &:hover { opacity: 0.85; }
+  &:disabled { opacity: 0.4; cursor: not-allowed; }
 `;
 
 const CardHeader = styled.div`
@@ -164,6 +199,8 @@ export const CommunityPage: React.FC = () => {
   const [sort, setSort] = useState<'trust' | 'recent' | 'popular'>('popular');
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [downloading, setDownloading] = useState(false);
 
   const fetchKeyboards = useCallback(async () => {
     setLoading(true);
@@ -193,6 +230,24 @@ export const CommunityPage: React.FC = () => {
     if (e.key === 'Enter') {
       setPage(1);
       fetchKeyboards();
+    }
+  };
+
+  const handleDownloadJson = async (kb: KeyboardListItem) => {
+    setDownloading(true);
+    try {
+      const json = await getDefinitionJson(kb.id);
+      const blob = new Blob([JSON.stringify(json, null, 2)], {type: 'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${kb.keyboardName.replace(/[^a-zA-Z0-9_-]/g, '_')}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch {
+      // Silently fail download
+    } finally {
+      setDownloading(false);
     }
   };
 
@@ -237,7 +292,11 @@ export const CommunityPage: React.FC = () => {
         <>
           <KeyboardGrid>
             {keyboards.map((kb) => (
-              <KeyboardCard key={kb.id}>
+              <KeyboardCard
+                key={kb.id}
+                $expanded={expandedId === kb.id}
+                onClick={() => setExpandedId(expandedId === kb.id ? null : kb.id)}
+              >
                 <CardHeader>
                   <CardName>{kb.keyboardName}</CardName>
                   <TrustBadge score={kb.trustScore} size="small" />
@@ -256,6 +315,33 @@ export const CommunityPage: React.FC = () => {
                     <MetaItem>by {kb.uploaderName}</MetaItem>
                   )}
                 </CardMeta>
+                {expandedId === kb.id && (
+                  <CardDetail>
+                    <DetailRow>
+                      <span>VID / PID</span>
+                      <span>0x{kb.vendorId.toString(16).toUpperCase().padStart(4, '0')} / 0x{kb.productId.toString(16).toUpperCase().padStart(4, '0')}</span>
+                    </DetailRow>
+                    <DetailRow>
+                      <span>Connection</span>
+                      <span>{kb.connectionType}</span>
+                    </DetailRow>
+                    <DetailRow>
+                      <span>Added</span>
+                      <span>{new Date(kb.createdAt).toLocaleDateString()}</span>
+                    </DetailRow>
+                    <CardActions>
+                      <ActionButton
+                        disabled={downloading}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDownloadJson(kb);
+                        }}
+                      >
+                        {downloading ? 'Downloading...' : 'Download JSON'}
+                      </ActionButton>
+                    </CardActions>
+                  </CardDetail>
+                )}
               </KeyboardCard>
             ))}
           </KeyboardGrid>

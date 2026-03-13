@@ -8,6 +8,13 @@ import {
   ValidationError,
   DuplicateError,
 } from '../services/definition.service.js';
+import {
+  recordVote,
+  recordSession,
+  type VoteType,
+  type SessionOutcome,
+} from '../services/trust.service.js';
+import { isValidFingerprint, hashIp } from '../utils/fingerprint.js';
 
 // Request schemas
 const searchBodySchema = z.object({
@@ -39,6 +46,28 @@ const idParamSchema = z.object({
  * GET  /:id/json   - Get the JSON file for a definition
  */
 export async function definitionsRoutes(fastify: FastifyInstance) {
+  /**
+   * GET /api/v1/definitions/search?vendorId=...&productId=...&productName=...
+   * Frontend-compatible search endpoint (query params).
+   */
+  fastify.get('/search', async (request: FastifyRequest, reply: FastifyReply) => {
+    const query = request.query as Record<string, string>;
+    const parseResult = searchBodySchema.safeParse({
+      vendorId: query.vendorId ? Number(query.vendorId) : undefined,
+      productId: query.productId ? Number(query.productId) : undefined,
+      productName: query.productName,
+    });
+    if (!parseResult.success) {
+      return reply.status(400).send({
+        error: 'Invalid query parameters',
+        details: parseResult.error.flatten().fieldErrors,
+      });
+    }
+
+    const results = await searchDefinitions(parseResult.data);
+    return reply.send(results);
+  });
+
   /**
    * POST /api/v1/definitions/search
    * Search for definitions by vendorId + productId (+ optional productName).
@@ -186,5 +215,93 @@ export async function definitionsRoutes(fastify: FastifyInstance) {
       .header('Content-Type', 'application/json')
       .header('Cache-Control', 'public, max-age=3600')
       .send(jsonContent);
+  });
+
+  /**
+   * POST /api/v1/definitions/:id/vote
+   * Frontend-compatible vote endpoint (ID in URL path).
+   */
+  fastify.post('/:id/vote', async (request: FastifyRequest, reply: FastifyReply) => {
+    const paramResult = idParamSchema.safeParse(request.params);
+    if (!paramResult.success) {
+      return reply.status(400).send({ error: 'Invalid ID format' });
+    }
+
+    const body = request.body as Record<string, unknown>;
+    const voteType = body.voteType as string;
+    if (voteType !== 'up' && voteType !== 'down') {
+      return reply.status(400).send({ error: 'voteType must be "up" or "down"' });
+    }
+
+    let voterHash = body.voterHash as string | undefined;
+    if (!voterHash || !isValidFingerprint(voterHash)) {
+      voterHash = hashIp(request.ip);
+    }
+
+    try {
+      const updated = await recordVote(paramResult.data.id, voterHash, voteType as VoteType);
+      return reply.send({
+        upvotes: updated.upvotes,
+        downvotes: updated.downvotes,
+        trustScore: updated.trustScore,
+        userVote: voteType,
+      });
+    } catch (error: any) {
+      if (error.message?.includes('not found')) {
+        return reply.status(404).send({ error: 'Not found', message: error.message });
+      }
+      throw error;
+    }
+  });
+
+  /**
+   * POST /api/v1/definitions/:id/session
+   * Frontend-compatible session endpoint (ID in URL path).
+   * Maps frontend outcomes (completed/errored) to backend outcomes (success/fail).
+   */
+  fastify.post('/:id/session', async (request: FastifyRequest, reply: FastifyReply) => {
+    const paramResult = idParamSchema.safeParse(request.params);
+    if (!paramResult.success) {
+      return reply.status(400).send({ error: 'Invalid ID format' });
+    }
+
+    const body = request.body as Record<string, unknown>;
+
+    // Map frontend outcome names to backend names
+    const outcomeMap: Record<string, SessionOutcome> = {
+      completed: 'success',
+      errored: 'fail',
+      replaced: 'replaced',
+      success: 'success',
+      fail: 'fail',
+      partial: 'partial',
+    };
+    const rawOutcome = body.outcome as string;
+    const outcome = outcomeMap[rawOutcome];
+    if (!outcome) {
+      return reply.status(400).send({ error: 'Invalid outcome' });
+    }
+
+    const durationSec = typeof body.durationSec === 'number' ? body.durationSec : undefined;
+
+    let sessionHash = body.sessionHash as string | undefined;
+    if (!sessionHash || !isValidFingerprint(sessionHash)) {
+      sessionHash = hashIp(request.ip);
+    }
+
+    try {
+      const updated = await recordSession(paramResult.data.id, sessionHash, outcome, durationSec);
+      return reply.send({
+        id: updated.id,
+        definitionId: paramResult.data.id,
+        outcome: rawOutcome,
+        trustScore: updated.trustScore,
+      });
+    } catch (error: any) {
+      if (error.message?.includes('not found')) {
+        return reply.status(404).send({ error: 'Not found', message: error.message });
+      }
+      throw error;
+    }
   });
 }

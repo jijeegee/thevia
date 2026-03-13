@@ -199,7 +199,7 @@ export const reloadConnectedDevices =
     );
 
     // Community fallback: search for community definitions for unmatched devices
-    const communityEnabled = getCommunityEnabled(getState() as any);
+    const communityEnabled = getCommunityEnabled(getState());
     if (communityEnabled && unmatchedDevices.length > 0) {
       // Search community DB for the first unmatched device (non-blocking)
       const device = unmatchedDevices[0];

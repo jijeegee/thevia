@@ -12,11 +12,6 @@ import {
 } from './api';
 import {getFingerprint, markReplaced, startSession} from './session-tracker';
 
-// Augmented RootState that includes the community slice.
-// This allows selectors to work before the reducer is registered in the store.
-// Once the reducer is added to the store's configureStore, RootState will include
-// 'community' natively and this type can be removed.
-type RootStateWithCommunity = RootState & {community: CommunityState};
 
 // ── Types ──────────────────────────────────────────────────────────
 
@@ -321,29 +316,26 @@ export const {
 export default communitySlice.reducer;
 
 // ── Selectors ──────────────────────────────────────────────────────
-// These selectors use RootStateWithCommunity so they type-check before
-// the community reducer is registered in the store. Once integration
-// is complete and the store includes 'community', these can use RootState directly.
 
-export const getCommunityState = (state: RootStateWithCommunity) =>
+export const getCommunityState = (state: RootState) =>
   state.community;
-export const getMatchedDefinition = (state: RootStateWithCommunity) =>
+export const getMatchedDefinition = (state: RootState) =>
   state.community.matchedDefinition;
-export const getMatchedDefinitionJson = (state: RootStateWithCommunity) =>
+export const getMatchedDefinitionJson = (state: RootState) =>
   state.community.matchedDefinitionJson;
-export const getAvailableDefinitions = (state: RootStateWithCommunity) =>
+export const getAvailableDefinitions = (state: RootState) =>
   state.community.availableDefinitions;
-export const getMatchStatus = (state: RootStateWithCommunity) =>
+export const getMatchStatus = (state: RootState) =>
   state.community.matchStatus;
-export const getCommunityEnabled = (state: RootStateWithCommunity) =>
+export const getCommunityEnabled = (state: RootState) =>
   state.community.communityEnabled;
-export const getUploadStatus = (state: RootStateWithCommunity) =>
+export const getUploadStatus = (state: RootState) =>
   state.community.uploadStatus;
-export const getCommunityError = (state: RootStateWithCommunity) =>
+export const getCommunityError = (state: RootState) =>
   state.community.error;
-export const getUserVotes = (state: RootStateWithCommunity) =>
+export const getUserVotes = (state: RootState) =>
   state.community.userVotes;
-export const getIsDismissed = (state: RootStateWithCommunity) =>
+export const getIsDismissed = (state: RootState) =>
   state.community.dismissed;
-export const getLastSearchedDevice = (state: RootStateWithCommunity) =>
+export const getLastSearchedDevice = (state: RootState) =>
   state.community.lastSearchedDevice;

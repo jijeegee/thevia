@@ -8,6 +8,7 @@ import { closeDb } from './db/index.js';
 import { definitionsRoutes } from './routes/definitions.js';
 import { trustRoutes } from './routes/trust.js';
 import { keyboardsRoutes } from './routes/keyboards.js';
+import { statsRoutes } from './routes/stats.js';
 
 /**
  * TheVIA Backend Server
@@ -79,12 +80,13 @@ async function buildServer() {
       await api.register(definitionsRoutes, { prefix: '/definitions' });
       await api.register(trustRoutes, { prefix: '/trust' });
       await api.register(keyboardsRoutes, { prefix: '/keyboards' });
+      await api.register(statsRoutes, { prefix: '/stats' });
     },
     { prefix: '/api/v1' },
   );
 
   // --- Global error handler ---
-  fastify.setErrorHandler((error, request, reply) => {
+  fastify.setErrorHandler((error: Error & { statusCode?: number }, request, reply) => {
     const statusCode = error.statusCode ?? 500;
 
     if (statusCode >= 500) {
@@ -138,8 +140,8 @@ async function start() {
     fastify.log.info(`TheVIA server running at http://${config.HOST}:${config.PORT}`);
     fastify.log.info(`Environment: ${config.NODE_ENV}`);
     fastify.log.info(`Storage: ${config.STORAGE_TYPE}`);
-  } catch (error) {
-    fastify.log.error(error, 'Failed to start server');
+  } catch (err) {
+    fastify.log.error(err, 'Failed to start server');
     process.exit(1);
   }
 }
