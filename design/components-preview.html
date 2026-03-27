@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TheVIA - Component Design System Preview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="design-tokens.css">
+  <link rel="stylesheet" href="components.css">
+  <link rel="stylesheet" href="layout.css">
+  <style>
+    /* Preview Page Specific Styles */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: var(--bg-base);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      font-size: var(--text-base);
+      line-height: var(--leading-normal);
+      -webkit-font-smoothing: antialiased;
+    }
+    .preview-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 48px 32px;
+    }
+    .preview-hero {
+      text-align: center;
+      padding: 64px 0 48px;
+      border-bottom: 1px solid var(--border-subtle);
+      margin-bottom: 64px;
+    }
+    .preview-hero h1 {
+      font-size: 40px;
+      font-weight: 700;
+      color: var(--accent-primary);
+      margin-bottom: 12px;
+      letter-spacing: -0.02em;
+    }
+    .preview-hero p {
+      font-size: var(--text-lg);
+      color: var(--text-secondary);
+    }
+    .section {
+      margin-bottom: 64px;
+    }
+    .section-title {
+      font-size: var(--text-xs);
+      font-weight: var(--font-bold);
+      color: var(--accent-primary);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .section-heading {
+      font-size: var(--text-2xl);
+      font-weight: var(--font-bold);
+      color: var(--text-primary);
+      margin-bottom: 32px;
+    }
+    .component-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .component-row-label {
+      width: 120px;
+      flex-shrink: 0;
+      font-size: var(--text-sm);
+      color: var(--text-muted);
+      font-weight: var(--font-medium);
+    }
+    .component-row-items {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+    }
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 12px;
+    }
+    .color-swatch {
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--border-subtle);
+    }
+    .color-swatch-box {
+      height: 64px;
+    }
+    .color-swatch-info {
+      padding: 10px 12px;
+      background: var(--bg-surface);
+    }
+    .color-swatch-name {
+      font-size: var(--text-sm);
+      font-weight: var(--font-medium);
+      color: var(--text-primary);
+    }
+    .color-swatch-value {
+      font-size: var(--text-xs);
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .type-sample {
+      margin-bottom: 16px;
+    }
+    .type-label {
+      font-size: var(--text-xs);
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border-subtle);
+      margin: 48px 0;
+    }
+    .demo-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      padding: 32px;
+      margin-bottom: 24px;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .input-demo {
+      max-width: 320px;
+    }
+    .inline-label {
+      font-size: var(--text-xs);
+      color: var(--text-muted);
+      margin-bottom: 4px;
+      font-weight: var(--font-medium);
+    }
+  </style>
+</head>
+<body>
+
+<div class="preview-container">
+
+  <!-- Hero -->
+  <div class="preview-hero">
+    <h1>TheVIA</h1>
+    <p>Component Design System &mdash; Modern Dark Theme</p>
+  </div>
+
+  <!-- ============================== -->
+  <!-- SECTION: Colors -->
+  <!-- ============================== -->
+  <div class="section">
+    <div class="section-title">01</div>
+    <h2 class="section-heading">Colors</h2>
+
+    <p class="inline-label" style="margin-bottom:16px; font-size:var(--text-base); color:var(--text-secondary);">Background Hierarchy</p>
+    <div class="color-grid" style="margin-bottom:32px;">
+      <div class="color-swatch">
+        <div class="color-swatch-box" style="background:#131520;"></div>
+        <div class="color-swatch-info"><div class="color-swatch-name">Base</div><div class="color-swatch-value">#131520</div></div>
+      </div>
+      <div class="color-swatch">
+        <div class="color-swatch-box" style="background:#1a1d2e;"></div>
+        <div class="color-swatch-info"><div class="color-swatch-name">Surface</div><div class="color-swatch-value">#1a1d2e</div></div>
+      </div>
+      <div class="color-swatch">
+        <div class="color-swatch-box" style="background:#232740;"></div>
+        <div class="color-swatch-info"><div class="color-swatch-name">Elevated</div><div class="color-swatch-value">#232740</div></div>
+      </div>
+      <div class="color-swatch">
+        <div class="color-swatch-box" style="background:#2a2f4a;"></div>
+        <div class="color-swatch-info"><div class="color-swatch-name">Overlay</div><div class="color-swatch-value">#2a2f4a</div></div>
+      </div>
+    </div>
+
+    <p class="inline-label" style="margin-bottom:16px; font-size:var(--text-base); color:var(--text-secondary);">Accent & Semantic</p>
+    <div class="color-grid" style="margin-bottom:32px;">
+      <div class="color-swatch">
+        <div class="color-swatch-box" style="background:#5de4c7;"></div>
+        <div class="color-swatch-info"><div class="color-swatch-name">Primary Accent</div><div class="color-swatch-value">#5de4c7</div></div>
+      </div>
+      <div class="color-swatch">
+        <div class="color-swatch-box" style="background:#7b93db;"></div>
+        <div class="color-swatch-info"><div class="color-swatch-name">Secondary</div><div class="color-swatch-value">#7b93db</div></div>
+      </div>
+      <div class="color-swatch">
+        <div class="color-swatch-box" style="background:#a78bfa;"></div>
+        <div class="color-swatch-info"><div class="color-swatch-name">Purple</div><div class="color-swatch-value">#a78bfa</div></div>
+      </div>
+      <div class="color-swatch">
+        <div class="color-swatch-box" style="background:#34d399;"></div>
+        <div class="color-swatch-info"><div class="color-swatch-name">Success</div><div class="color-swatch-value">#34d399</div></div>
+      </div>
+      <div class="color-swatch">
+        <div class="color-swatch-box" style="background:#fbbf24;"></div>
+        <div class="color-swatch-info"><div class="color-swatch-name">Warning</div><div class="color-swatch-value">#fbbf24</div></div>
+      </div>
+      <div class="color-swatch">
+        <div class="color-swatch-box" style="background:#f87171;"></div>
+        <div class="color-swatch-info"><div class="color-swatch-name">Error</div><div class="color-swatch-value">#f87171</div></div>
+      </div>
+    </div>
+
+    <p class="inline-label" style="margin-bottom:16px; font-size:var(--text-base); color:var(--text-secondary);">Text</p>
+    <div class="color-grid">
+      <div class="color-swatch">
+        <div class="color-swatch-box" style="background:#e4e4e8; height:48px;"></div>
+        <div class="color-swatch-info"><div class="color-swatch-name">Primary Text</div><div class="color-swatch-value">#e4e4e8</div></div>
+      </div>
+      <div class="color-swatch">
+        <div class="color-swatch-box" style="background:#a1a1aa; height:48px;"></div>
+        <div class="color-swatch-info"><div class="color-swatch-name">Secondary</div><div class="color-swatch-value">#a1a1aa</div></div>
+      </div>
+      <div class="color-swatch">
+        <div class="color-swatch-box" style="background:#636370; height:48px;"></div>
+        <div class="color-swatch-info"><div class="color-swatch-name">Muted</div><div class="color-swatch-value">#636370</div></div>
+      </div>
+      <div class="color-swatch">
+        <div class="color-swatch-box" style="background:#45454d; height:48px;"></div>
+        <div class="color-swatch-info"><div class="color-swatch-name">Disabled</div><div class="color-swatch-value">#45454d</div></div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ============================== -->
+  <!-- SECTION: Typography -->
+  <!-- ============================== -->
+  <div class="section">
+    <div class="section-title">02</div>
+    <h2 class="section-heading">Typography</h2>
+
+    <div class="type-sample"><div class="type-label">text-3xl / 32px Bold</div><div style="font-size:var(--text-3xl); font-weight:700;">TheVIA Keyboard Configurator</div></div>
+    <div class="type-sample"><div class="type-label">text-2xl / 24px Bold</div><div style="font-size:var(--text-2xl); font-weight:700;">Community Keyboards</div></div>
+    <div class="type-sample"><div class="type-label">text-xl / 20px Semibold</div><div style="font-size:var(--text-xl); font-weight:600;">Settings & Configuration</div></div>
+    <div class="type-sample"><div class="type-label">text-lg / 18px Semibold</div><div style="font-size:var(--text-lg); font-weight:600;">Keyboard Layout</div></div>
+    <div class="type-sample"><div class="type-label">text-md / 16px Medium</div><div style="font-size:var(--text-md); font-weight:500;">Remap your keys easily</div></div>
+    <div class="type-sample"><div class="type-label">text-base / 14px Regular</div><div style="font-size:var(--text-base); font-weight:400;">Default body text for descriptions and content</div></div>
+    <div class="type-sample"><div class="type-label">text-sm / 13px Regular</div><div style="font-size:var(--text-sm); font-weight:400; color:var(--text-secondary);">Secondary information and labels</div></div>
+    <div class="type-sample"><div class="type-label">text-xs / 12px Medium (Mono)</div><div style="font-size:var(--text-xs); font-weight:500; font-family:var(--font-mono); color:var(--text-muted);">KC_A  KC_LCTL  MO(1)  TG(2)</div></div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ============================== -->
+  <!-- SECTION: Buttons -->
+  <!-- ============================== -->
+  <div class="section">
+    <div class="section-title">03</div>
+    <h2 class="section-heading">Buttons</h2>
+
+    <div class="component-row">
+      <div class="component-row-label">Primary</div>
+      <div class="component-row-items">
+        <button class="btn btn-primary btn-sm">Small</button>
+        <button class="btn btn-primary">Default</button>
+        <button class="btn btn-primary btn-lg">Large</button>
+        <button class="btn btn-primary" disabled>Disabled</button>
+      </div>
+    </div>
+
+    <div class="component-row">
+      <div class="component-row-label">Secondary</div>
+      <div class="component-row-items">
+        <button class="btn btn-secondary btn-sm">Small</button>
+        <button class="btn btn-secondary">Default</button>
+        <button class="btn btn-secondary btn-lg">Large</button>
+        <button class="btn btn-secondary" disabled>Disabled</button>
+      </div>
+    </div>
+
+    <div class="component-row">
+      <div class="component-row-label">Ghost</div>
+      <div class="component-row-items">
+        <button class="btn btn-ghost btn-sm">Small</button>
+        <button class="btn btn-ghost">Default</button>
+        <button class="btn btn-ghost btn-lg">Large</button>
+      </div>
+    </div>
+
+    <div class="component-row">
+      <div class="component-row-label">Danger</div>
+      <div class="component-row-items">
+        <button class="btn btn-danger btn-sm">Delete</button>
+        <button class="btn btn-danger">Remove Keyboard</button>
+      </div>
+    </div>
+
+    <div class="component-row">
+      <div class="component-row-label">Icon</div>
+      <div class="component-row-items">
+        <button class="btn btn-icon">&#9776;</button>
+        <button class="btn btn-icon">&#9881;</button>
+        <button class="btn btn-icon">&#10005;</button>
+        <button class="btn btn-icon">&#8942;</button>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ============================== -->
+  <!-- SECTION: Inputs -->
+  <!-- ============================== -->
+  <div class="section">
+    <div class="section-title">04</div>
+    <h2 class="section-heading">Inputs</h2>
+
+    <div class="grid-2">
+      <div>
+        <div class="input-group" style="margin-bottom:20px;">
+          <label class="input-label">Text Input</label>
+          <input type="text" class="input" placeholder="Enter keyboard name...">
+        </div>
+
+        <div class="input-group" style="margin-bottom:20px;">
+          <label class="input-label">Search</label>
+          <input type="text" class="input input-search" placeholder="Search keyboards...">
+        </div>
+
+        <div class="input-group" style="margin-bottom:20px;">
+          <label class="input-label">Select</label>
+          <select class="select">
+            <option>Sort by Trust Score</option>
+            <option>Sort by Recent</option>
+            <option>Sort by Popular</option>
+          </select>
+        </div>
+
+        <div class="input-group" style="margin-bottom:20px;">
+          <label class="input-label">Disabled Input</label>
+          <input type="text" class="input" value="Read only" disabled>
+        </div>
+      </div>
+
+      <div>
+        <div class="input-group" style="margin-bottom:24px;">
+          <label class="input-label">Toggle Switch</label>
+          <div style="display:flex;gap:24px;align-items:center;margin-top:4px;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <button class="toggle"></button>
+              <span style="font-size:var(--text-sm);color:var(--text-secondary);">Off</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <button class="toggle active"></button>
+              <span style="font-size:var(--text-sm);color:var(--text-secondary);">On</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="input-group" style="margin-bottom:24px;">
+          <label class="input-label">Slider</label>
+          <input type="range" class="slider" min="0" max="100" value="60">
+          <div class="input-hint">Brightness: 60%</div>
+        </div>
+
+        <div class="input-group" style="margin-bottom:24px;">
+          <label class="input-label">With Hint Text</label>
+          <input type="text" class="input" placeholder="my-keyboard-v1">
+          <div class="input-hint">Only lowercase, numbers, and hyphens</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ============================== -->
+  <!-- SECTION: Badges -->
+  <!-- ============================== -->
+  <div class="section">
+    <div class="section-title">05</div>
+    <h2 class="section-heading">Badges</h2>
+
+    <div class="component-row">
+      <div class="component-row-label">Status</div>
+      <div class="component-row-items">
+        <span class="badge badge-accent">COMMUNITY</span>
+        <span class="badge badge-success">VERIFIED</span>
+        <span class="badge badge-warning">PENDING</span>
+        <span class="badge badge-error">FLAGGED</span>
+        <span class="badge badge-info">NEW</span>
+        <span class="badge badge-neutral">DRAFT</span>
+      </div>
+    </div>
+
+    <div class="component-row">
+      <div class="component-row-label">Trust Badge</div>
+      <div class="component-row-items">
+        <span class="trust-badge trust-badge-high">&#9733; Trust 92</span>
+        <span class="trust-badge trust-badge-medium">&#9733; Trust 65</span>
+        <span class="trust-badge trust-badge-low">&#9733; Trust 23</span>
+      </div>
+    </div>
+
+    <div class="component-row">
+      <div class="component-row-label">Layer</div>
+      <div class="component-row-items">
+        <span class="layer-badge active">0</span>
+        <span class="layer-badge">1</span>
+        <span class="layer-badge">2</span>
+        <span class="layer-badge">3</span>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ============================== -->
+  <!-- SECTION: Cards -->
+  <!-- ============================== -->
+  <div class="section">
+    <div class="section-title">06</div>
+    <h2 class="section-heading">Cards</h2>
+
+    <p class="inline-label" style="margin-bottom:16px;">Keyboard Cards (Community Grid)</p>
+    <div class="grid-3" style="margin-bottom:32px;">
+      <div class="keyboard-card">
+        <div style="display:flex;justify-content:space-between;align-items:start;">
+          <div>
+            <div class="keyboard-card-name">Nut65</div>
+            <div class="keyboard-card-vendor">TheVIA Custom</div>
+          </div>
+          <span class="trust-badge trust-badge-high">&#9733; 92</span>
+        </div>
+        <div class="keyboard-card-meta">
+          <div class="keyboard-card-stat">&#9650; 48</div>
+          <div class="keyboard-card-stat">&#9660; 2</div>
+          <div class="keyboard-card-stat">&#128100; 156 sessions</div>
+        </div>
+        <div style="margin-top:16px;display:flex;gap:8px;">
+          <button class="btn btn-primary btn-sm" style="flex:1;">Load</button>
+          <button class="btn btn-secondary btn-sm">JSON</button>
+        </div>
+      </div>
+
+      <div class="keyboard-card">
+        <div style="display:flex;justify-content:space-between;align-items:start;">
+          <div>
+            <div class="keyboard-card-name">Raven68</div>
+            <div class="keyboard-card-vendor">TheVIA Custom</div>
+          </div>
+          <span class="trust-badge trust-badge-medium">&#9733; 65</span>
+        </div>
+        <div class="keyboard-card-meta">
+          <div class="keyboard-card-stat">&#9650; 31</div>
+          <div class="keyboard-card-stat">&#9660; 5</div>
+          <div class="keyboard-card-stat">&#128100; 89 sessions</div>
+        </div>
+        <div style="margin-top:16px;display:flex;gap:8px;">
+          <button class="btn btn-primary btn-sm" style="flex:1;">Load</button>
+          <button class="btn btn-secondary btn-sm">JSON</button>
+        </div>
+      </div>
+
+      <div class="keyboard-card">
+        <div style="display:flex;justify-content:space-between;align-items:start;">
+          <div>
+            <div class="keyboard-card-name">Ace60 Pro</div>
+            <div class="keyboard-card-vendor">Community Upload</div>
+          </div>
+          <span class="trust-badge trust-badge-low">&#9733; 23</span>
+        </div>
+        <div class="keyboard-card-meta">
+          <div class="keyboard-card-stat">&#9650; 8</div>
+          <div class="keyboard-card-stat">&#9660; 12</div>
+          <div class="keyboard-card-stat">&#128100; 15 sessions</div>
+        </div>
+        <div style="margin-top:16px;display:flex;gap:8px;">
+          <button class="btn btn-primary btn-sm" style="flex:1;">Load</button>
+          <button class="btn btn-secondary btn-sm">JSON</button>
+        </div>
+      </div>
+    </div>
+
+    <p class="inline-label" style="margin-bottom:16px;">Settings Panel</p>
+    <div style="max-width:640px;">
+      <div class="settings-panel">
+        <div class="settings-row">
+          <div>
+            <div class="settings-row-label">Show Design Tab</div>
+            <div class="settings-row-desc">Enable keyboard definition editor</div>
+          </div>
+          <button class="toggle"></button>
+        </div>
+        <div class="settings-row">
+          <div>
+            <div class="settings-row-label">Fast Key Mapping</div>
+            <div class="settings-row-desc">Click keys to remap without selecting first</div>
+          </div>
+          <button class="toggle active"></button>
+        </div>
+        <div class="settings-row">
+          <div>
+            <div class="settings-row-label">Community Features</div>
+            <div class="settings-row-desc">Auto-match keyboards with community definitions</div>
+          </div>
+          <button class="toggle active"></button>
+        </div>
+        <div class="settings-row">
+          <div>
+            <div class="settings-row-label">Render Mode</div>
+            <div class="settings-row-desc">Choose 2D or 3D keyboard rendering</div>
+          </div>
+          <select class="select" style="width:140px;">
+            <option>3D (WebGL)</option>
+            <option>2D (SVG)</option>
+          </select>
+        </div>
+        <div class="settings-row">
+          <div>
+            <div class="settings-row-label">Theme</div>
+            <div class="settings-row-desc">Visual theme for keyboard preview</div>
+          </div>
+          <select class="select" style="width:140px;">
+            <option>Dark (Default)</option>
+            <option>Olivia Dark</option>
+            <option>Navy Blue</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ============================== -->
+  <!-- SECTION: Navigation -->
+  <!-- ============================== -->
+  <div class="section">
+    <div class="section-title">07</div>
+    <h2 class="section-heading">Navigation</h2>
+
+    <p class="inline-label" style="margin-bottom:16px;">Tab Bar</p>
+    <div class="tab-bar" style="display:inline-flex;margin-bottom:32px;">
+      <button class="tab-item active">&#9000; Configure</button>
+      <button class="tab-item">&#9881; Test</button>
+      <button class="tab-item">&#9998; Design</button>
+      <button class="tab-item">&#128101; Community</button>
+      <button class="tab-item">&#9881; Settings</button>
+    </div>
+
+    <p class="inline-label" style="margin-bottom:16px;">Side Menu</p>
+    <div style="width:220px;background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:var(--radius-lg);padding:var(--space-2);">
+      <div class="sub-menu-title">Configure</div>
+      <button class="menu-item active">&#9000; Keymap</button>
+      <button class="menu-item">&#9776; Layouts</button>
+      <button class="menu-item">&#9728; Lighting</button>
+      <button class="menu-item">&#9654; Macros</button>
+      <button class="menu-item">&#128190; Save / Load</button>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ============================== -->
+  <!-- SECTION: Keycaps -->
+  <!-- ============================== -->
+  <div class="section">
+    <div class="section-title">08</div>
+    <h2 class="section-heading">Keycaps</h2>
+
+    <p class="inline-label" style="margin-bottom:16px;">States</p>
+    <div class="component-row" style="margin-bottom:24px;">
+      <div class="component-row-items">
+        <div class="keycap">Esc</div>
+        <div class="keycap active">A</div>
+        <div class="keycap pressed">S</div>
+        <div class="keycap">D</div>
+        <div class="keycap">F</div>
+      </div>
+    </div>
+
+    <p class="inline-label" style="margin-bottom:16px;">Sizes</p>
+    <div style="display:flex;align-items:flex-start;gap:4px;flex-wrap:wrap;margin-bottom:24px;">
+      <div class="keycap">1u</div>
+      <div class="keycap keycap-1_25u">1.25u</div>
+      <div class="keycap keycap-1_5u">1.5u</div>
+      <div class="keycap keycap-1_75u">1.75u</div>
+      <div class="keycap keycap-2u">2u</div>
+      <div class="keycap keycap-2_25u">2.25u</div>
+    </div>
+
+    <p class="inline-label" style="margin-bottom:16px;">Mini Keyboard Row (Sample)</p>
+    <div style="display:flex;gap:4px;margin-bottom:8px;">
+      <div class="keycap" style="width:48px;height:48px;font-size:10px;">Esc</div>
+      <div class="keycap" style="width:48px;height:48px;font-size:10px;">1</div>
+      <div class="keycap" style="width:48px;height:48px;font-size:10px;">2</div>
+      <div class="keycap" style="width:48px;height:48px;font-size:10px;">3</div>
+      <div class="keycap" style="width:48px;height:48px;font-size:10px;">4</div>
+      <div class="keycap" style="width:48px;height:48px;font-size:10px;">5</div>
+      <div class="keycap" style="width:48px;height:48px;font-size:10px;">6</div>
+      <div class="keycap" style="width:48px;height:48px;font-size:10px;">7</div>
+      <div class="keycap" style="width:48px;height:48px;font-size:10px;">8</div>
+      <div class="keycap" style="width:48px;height:48px;font-size:10px;">9</div>
+      <div class="keycap" style="width:48px;height:48px;font-size:10px;">0</div>
+      <div class="keycap" style="width:48px;height:48px;font-size:10px;">-</div>
+      <div class="keycap" style="width:48px;height:48px;font-size:10px;">=</div>
+      <div class="keycap" style="width:96px;height:48px;font-size:10px;">Bksp</div>
+    </div>
+    <div style="display:flex;gap:4px;margin-bottom:8px;">
+      <div class="keycap" style="width:72px;height:48px;font-size:10px;">Tab</div>
+      <div class="keycap active" style="width:48px;height:48px;font-size:10px;">Q</div>
+      <div class="keycap" style="width:48px;height:48px;font-size:10px;">W</div>
+      <div class="keycap" style="width:48px;height:48px;font-size:10px;">E</div>
+      <div class="keycap" style="width:48px;height:48px;font-size:10px;">R</div>
+      <div class="keycap" style="width:48px;height:48px;font-size:10px;">T</div>
+      <div class="keycap" style="width:48px;height:48px;font-size:10px;">Y</div>
+      <div class="keycap" style="width:48px;height:48px;font-size:10px;">U</div>
+      <div class="keycap" style="width:48px;height:48px;font-size:10px;">I</div>
+      <div class="keycap" style="width:48px;height:48px;font-size:10px;">O</div>
+      <div class="keycap" style="width:48px;height:48px;font-size:10px;">P</div>
+      <div class="keycap" style="width:48px;height:48px;font-size:10px;">[</div>
+      <div class="keycap" style="width:48px;height:48px;font-size:10px;">]</div>
+      <div class="keycap" style="width:72px;height:48px;font-size:10px;">\</div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ============================== -->
+  <!-- SECTION: Vote & Notification -->
+  <!-- ============================== -->
+  <div class="section">
+    <div class="section-title">09</div>
+    <h2 class="section-heading">Vote & Notification</h2>
+
+    <div class="component-row" style="margin-bottom:24px;">
+      <div class="component-row-label">Vote Group</div>
+      <div class="component-row-items">
+        <div class="vote-group">
+          <button class="vote-btn upvoted">&#9650; 48</button>
+          <button class="vote-btn">&#9660; 2</button>
+        </div>
+        <div class="vote-group">
+          <button class="vote-btn">&#9650; 12</button>
+          <button class="vote-btn downvoted">&#9660; 8</button>
+        </div>
+        <div class="vote-group">
+          <button class="vote-btn">&#9650; 0</button>
+          <button class="vote-btn">&#9660; 0</button>
+        </div>
+      </div>
+    </div>
+
+    <p class="inline-label" style="margin-bottom:12px;">Notification Bar</p>
+    <div class="notification-bar" style="border-radius:var(--radius-lg);border:1px solid rgba(93,228,199,0.15);">
+      <span class="badge badge-accent">COMMUNITY</span>
+      <span class="notification-bar-text">Matched: <strong>Nut65 v1.2</strong> &mdash; Community definition loaded</span>
+      <span class="trust-badge trust-badge-high">&#9733; 92</span>
+      <div class="vote-group">
+        <button class="vote-btn upvoted">&#9650; 48</button>
+        <button class="vote-btn">&#9660; 2</button>
+      </div>
+      <button class="btn btn-icon" style="font-size:14px;">&#10005;</button>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ============================== -->
+  <!-- SECTION: Feedback -->
+  <!-- ============================== -->
+  <div class="section">
+    <div class="section-title">10</div>
+    <h2 class="section-heading">Feedback</h2>
+
+    <div class="component-row">
+      <div class="component-row-label">Toast</div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div class="toast toast-success">
+          <span class="toast-icon">&#10003;</span>
+          <span class="toast-message">Definition uploaded successfully</span>
+          <button class="toast-close">&#10005;</button>
+        </div>
+        <div class="toast toast-error">
+          <span class="toast-icon">&#10007;</span>
+          <span class="toast-message">Failed to connect keyboard</span>
+          <button class="toast-close">&#10005;</button>
+        </div>
+        <div class="toast toast-warning">
+          <span class="toast-icon">&#9888;</span>
+          <span class="toast-message">Unsaved changes will be lost</span>
+          <button class="toast-close">&#10005;</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="component-row" style="margin-top:24px;">
+      <div class="component-row-label">Loading</div>
+      <div class="component-row-items">
+        <div class="spinner"></div>
+        <span style="color:var(--text-secondary);font-size:var(--text-sm);">Loading keyboard...</span>
+      </div>
+    </div>
+
+    <div style="margin-top:24px;">
+      <p class="inline-label" style="margin-bottom:12px;">Empty State</p>
+      <div class="demo-box">
+        <div class="empty-state">
+          <div class="empty-state-icon">&#9000;</div>
+          <div class="empty-state-title">No Keyboard Connected</div>
+          <div class="empty-state-desc">Connect a VIA-compatible keyboard via USB to get started with key remapping</div>
+          <button class="btn btn-primary" style="margin-top:20px;">Browse Community</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ============================== -->
+  <!-- SECTION: Modal -->
+  <!-- ============================== -->
+  <div class="section">
+    <div class="section-title">11</div>
+    <h2 class="section-heading">Modal / Dialog</h2>
+
+    <div style="position:relative;height:400px;background:var(--bg-canvas);border-radius:var(--radius-xl);overflow:hidden;display:flex;align-items:center;justify-content:center;">
+      <div style="position:absolute;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);"></div>
+      <div class="modal" style="position:relative;">
+        <div class="modal-header">
+          <div class="modal-title">Upload Definition</div>
+          <button class="btn btn-icon" style="font-size:14px;">&#10005;</button>
+        </div>
+        <div class="modal-body">
+          <div class="input-group" style="margin-bottom:16px;">
+            <label class="input-label">JSON File</label>
+            <div style="border:2px dashed var(--border-default);border-radius:var(--radius-lg);padding:32px;text-align:center;color:var(--text-muted);">
+              Drop .json file here or click to browse
+            </div>
+          </div>
+          <div class="input-group">
+            <label class="input-label">Nickname (optional)</label>
+            <input type="text" class="input" placeholder="e.g., my-nut65-config">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-ghost">Cancel</button>
+          <button class="btn btn-primary">Upload to Community</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ============================== -->
+  <!-- SECTION: Pagination -->
+  <!-- ============================== -->
+  <div class="section">
+    <div class="section-title">12</div>
+    <h2 class="section-heading">Pagination</h2>
+
+    <div class="pagination">
+      <button class="page-btn">&laquo;</button>
+      <button class="page-btn">&lsaquo;</button>
+      <button class="page-btn active">1</button>
+      <button class="page-btn">2</button>
+      <button class="page-btn">3</button>
+      <button class="page-btn">4</button>
+      <button class="page-btn">5</button>
+      <button class="page-btn">&rsaquo;</button>
+      <button class="page-btn">&raquo;</button>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ============================== -->
+  <!-- SECTION: Layout Preview -->
+  <!-- ============================== -->
+  <div class="section">
+    <div class="section-title">13</div>
+    <h2 class="section-heading">Layout Preview &mdash; Configure Screen</h2>
+
+    <div style="border:1px solid var(--border-default);border-radius:var(--radius-xl);overflow:hidden;">
+      <div class="app-shell" style="height:640px;position:relative;">
+        <!-- Header -->
+        <div class="global-header">
+          <div class="global-header-left">
+            <div class="global-header-logo">TheVIA</div>
+            <div class="tab-bar" style="border:none;background:transparent;padding:0;">
+              <button class="tab-item active">Configure</button>
+              <button class="tab-item">Test</button>
+              <button class="tab-item">Design</button>
+              <button class="tab-item">Community</button>
+              <button class="tab-item">Settings</button>
+            </div>
+          </div>
+          <div class="global-header-right">
+            <span class="badge badge-accent" style="font-size:10px;">COMMUNITY</span>
+            <button class="btn btn-icon" style="font-size:14px;">&#127760;</button>
+          </div>
+        </div>
+
+        <!-- Notification -->
+        <div class="notification-bar" style="padding:8px 16px;font-size:12px;">
+          <span class="badge badge-accent" style="font-size:10px;padding:2px 8px;">MATCHED</span>
+          <span style="font-size:12px;color:var(--text-primary);flex:1;">Nut65 v1.2 &mdash; Trust 92</span>
+          <div class="vote-group" style="transform:scale(0.85);">
+            <button class="vote-btn upvoted">&#9650; 48</button>
+            <button class="vote-btn">&#9660; 2</button>
+          </div>
+        </div>
+
+        <!-- Canvas -->
+        <div class="canvas-area" style="min-height:180px;max-height:none;flex:1;">
+          <!-- Layer selector -->
+          <div class="layer-selector">
+            <span class="layer-badge active">0</span>
+            <span class="layer-badge">1</span>
+            <span class="layer-badge">2</span>
+            <span class="layer-badge">3</span>
+          </div>
+          <div class="canvas-area-label">3D Keyboard Canvas</div>
+        </div>
+
+        <!-- Configure Panel -->
+        <div class="configure-panel" style="height:240px;">
+          <!-- Icon Menu -->
+          <div class="icon-menu">
+            <button class="icon-menu-btn active" title="Keymap">&#9000;</button>
+            <button class="icon-menu-btn" title="Layouts">&#9776;</button>
+            <button class="icon-menu-btn" title="Lighting">&#9728;</button>
+            <button class="icon-menu-btn" title="Macros">&#9654;</button>
+            <button class="icon-menu-btn" title="Save">&#128190;</button>
+          </div>
+
+          <!-- Sub Menu -->
+          <div class="sub-menu">
+            <div class="sub-menu-title">Keymap</div>
+            <button class="menu-item active">Basic</button>
+            <button class="menu-item">Media</button>
+            <button class="menu-item">Macro</button>
+            <button class="menu-item">Layers</button>
+            <button class="menu-item">Special</button>
+            <button class="menu-item">Custom</button>
+          </div>
+
+          <!-- Content -->
+          <div class="content-area">
+            <div class="keycode-grid">
+              <div class="keycap" style="width:48px;height:48px;font-size:10px;">Esc</div>
+              <div class="keycap" style="width:48px;height:48px;font-size:10px;">F1</div>
+              <div class="keycap" style="width:48px;height:48px;font-size:10px;">F2</div>
+              <div class="keycap" style="width:48px;height:48px;font-size:10px;">F3</div>
+              <div class="keycap" style="width:48px;height:48px;font-size:10px;">F4</div>
+              <div class="keycap" style="width:48px;height:48px;font-size:10px;">F5</div>
+              <div class="keycap" style="width:48px;height:48px;font-size:10px;">F6</div>
+              <div class="keycap" style="width:48px;height:48px;font-size:10px;">F7</div>
+              <div class="keycap" style="width:48px;height:48px;font-size:10px;">F8</div>
+              <div class="keycap" style="width:48px;height:48px;font-size:10px;">F9</div>
+              <div class="keycap" style="width:48px;height:48px;font-size:10px;">F10</div>
+              <div class="keycap" style="width:48px;height:48px;font-size:10px;">F11</div>
+              <div class="keycap" style="width:48px;height:48px;font-size:10px;">F12</div>
+              <div class="keycap active" style="width:48px;height:48px;font-size:10px;">A</div>
+              <div class="keycap" style="width:48px;height:48px;font-size:10px;">B</div>
+              <div class="keycap" style="width:48px;height:48px;font-size:10px;">C</div>
+              <div class="keycap" style="width:48px;height:48px;font-size:10px;">D</div>
+              <div class="keycap" style="width:48px;height:48px;font-size:10px;">E</div>
+              <div class="keycap" style="width:48px;height:48px;font-size:10px;">F</div>
+              <div class="keycap" style="width:48px;height:48px;font-size:10px;">G</div>
+              <div class="keycap" style="width:48px;height:48px;font-size:10px;">H</div>
+              <div class="keycap" style="width:48px;height:48px;font-size:10px;">I</div>
+              <div class="keycap" style="width:48px;height:48px;font-size:10px;">J</div>
+              <div class="keycap" style="width:48px;height:48px;font-size:10px;">K</div>
+              <div class="keycap" style="width:48px;height:48px;font-size:10px;">L</div>
+              <div class="keycap" style="width:48px;height:48px;font-size:10px;">M</div>
+              <div class="keycap" style="width:48px;height:48px;font-size:10px;">N</div>
+              <div class="keycap" style="width:48px;height:48px;font-size:10px;">O</div>
+              <div class="keycap" style="width:48px;height:48px;font-size:10px;">P</div>
+              <div class="keycap" style="width:48px;height:48px;font-size:10px;">Q</div>
+              <div class="keycap" style="width:48px;height:48px;font-size:10px;">R</div>
+              <div class="keycap" style="width:48px;height:48px;font-size:10px;">S</div>
+              <div class="keycap" style="width:48px;height:48px;font-size:10px;">T</div>
+              <div class="keycap" style="width:48px;height:48px;font-size:10px;">U</div>
+              <div class="keycap" style="width:48px;height:48px;font-size:10px;">V</div>
+              <div class="keycap" style="width:48px;height:48px;font-size:10px;">W</div>
+              <div class="keycap" style="width:48px;height:48px;font-size:10px;">X</div>
+              <div class="keycap" style="width:48px;height:48px;font-size:10px;">Y</div>
+              <div class="keycap" style="width:48px;height:48px;font-size:10px;">Z</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align:center;padding:48px 0;color:var(--text-muted);font-size:var(--text-sm);">
+    TheVIA Design System &mdash; Modern Dark Theme
+  </div>
+
+</div>
+
+</body>
+</html>
